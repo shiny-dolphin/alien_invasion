@@ -13,12 +13,14 @@ class Alien(Sprite):
 		self.game_settings = game_settings
 		self.game_stats = game_stats
 		
-		#sort out alien color and image
+		#sort out alien color, score value and image
 		self.red = False
 		self.blue = False
 		self.green = False
-		self.image_color = self.find_image_color(self.game_stats.level)
-		
+		self.point_value = 0
+		self.image_color = ''
+		self.set_up_alien_color()
+
 		self.image = pygame.image.load(self.image_color)
 		self.rect = self.image.get_rect()
 		
@@ -30,19 +32,40 @@ class Alien(Sprite):
 		self.x = float(self.rect.x)
 		
 
-	def find_image_color(self, difficulty_level):
-		red_max = difficulty_level * 4
-		blue_max = difficulty_level * 4 + red_max
+	def set_up_alien_color(self):
+		"""sets the color of the alien Spawn rates for stronger red and blue 
+		aliens increase with level"""
+		difficulty_level = self.game_stats.level * 4
+		red_max = difficulty_level
+		blue_max = difficulty_level + red_max
 		random_number = random.randint(0,100)
 		if random_number < red_max:
 			self.red = True
-			return 'images/alien_red.bmp'
+			self.point_value = self.game_settings.alien_points_red
+			self.image_color =  'images/alien_red.bmp'
 		elif random_number < blue_max:
 			self.blue = True
-			return 'images/alien_blue.bmp'
+			self.point_value = self.game_settings.alien_points_blue
+			self.image_color = 'images/alien_blue.bmp'
 		else:
 			self.green = True
-			return 'images/alien.bmp'			
+			self.point_value = self.game_settings.alien_points_green
+			self.image_color = 'images/alien.bmp'		
+
+	def change_color(self):
+		"""changes the color and image of hit alien"""
+		if self.green:
+			return False	
+		elif self.red:
+			self.red = False
+			self.blue = True
+			self.image = pygame.image.load('images/alien_blue.bmp')
+			return True
+		elif self.blue:
+			self.blue = False
+			self.green = True
+			self.image = pygame.image.load('images/alien.bmp')
+			return True
 
 	
 	def check_edges(self):

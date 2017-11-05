@@ -136,11 +136,18 @@ def check_collisions(game_settings, game_stats, scoreboard, screen, ship,
 	#Check for collisions between bullets and aliens, removes both
 	collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 	
-	#updates the points
-	if collisions:
-		for aliens in collisions.values():
-			game_stats.score += game_settings.alien_points *len(aliens)
-			scoreboard.prep_score()
+	#updates the score
+	if collisions:	
+		for aliens_hit in collisions.values():
+			#checks whether the hit alien is destroyed and scores accordingly
+			while aliens_hit:
+				alien = aliens_hit.pop()
+				if(alien.change_color()):
+					aliens.add(alien)
+				else:
+					game_stats.score += alien.point_value	
+					scoreboard.prep_score()		
+		
 		check_high_score(game_stats, scoreboard)	
 	
 	#repopulate fleet if no aliens left
