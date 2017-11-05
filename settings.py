@@ -30,6 +30,8 @@ class Settings():
 		
 		#Scoring
 		self.alien_points = 50
+		self.alien_points_blue = 100
+		self.alien_points_red = 200
 		self.score_scale = 1.5
 		
 		

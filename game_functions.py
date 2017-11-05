@@ -180,7 +180,7 @@ def get_number_rows(game_settings, ship_height, alien_height):
 		(alien_height * 3) - ship_height)
 	number_rows = int(availabe_space_y / (2 * alien_height))
 	return number_rows
-	
+		
 	
 	
 def create_fleet(game_settings, screen, ship, aliens):
