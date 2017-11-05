@@ -6,18 +6,18 @@ class Alien(Sprite):
 	"""A class to represent a single alien in the fleet"""
 
 	
-	def __init__(self, game_settings, screen):
+	def __init__(self, game_settings, game_stats, screen):
 		"""Intitalise the alien and set its starting position."""
 		super().__init__()
 		self.screen = screen
 		self.game_settings = game_settings
+		self.game_stats = game_stats
 		
 		#sort out alien color and image
 		self.red = False
 		self.blue = False
 		self.green = False
-		self.image_color = self.find_image_color(4)
-		#self.image_color = 'images/alien_red.bmp'
+		self.image_color = self.find_image_color(self.game_stats.level)
 		
 		self.image = pygame.image.load(self.image_color)
 		self.rect = self.image.get_rect()
@@ -30,12 +30,14 @@ class Alien(Sprite):
 		self.x = float(self.rect.x)
 		
 
-	def find_image_color(self, num):
+	def find_image_color(self, difficulty_level):
+		red_max = difficulty_level * 4
+		blue_max = difficulty_level * 4 + red_max
 		random_number = random.randint(0,100)
-		if random_number < 10:
+		if random_number < red_max:
 			self.red = True
 			return 'images/alien_red.bmp'
-		elif random_number < 30:
+		elif random_number < blue_max:
 			self.blue = True
 			return 'images/alien_blue.bmp'
 		else:

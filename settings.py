@@ -26,7 +26,7 @@ class Settings():
 		self.fleet_direction = 1
 		
 		#How quickly the game speeds up
-		self.speed_up_scale = 1.1
+		self.speed_up_scale = 1.08
 		
 		#Scoring
 		self.alien_points = 50

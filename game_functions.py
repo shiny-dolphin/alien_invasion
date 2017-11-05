@@ -36,8 +36,8 @@ def check_keyup_events(event, ship):
 		
 
 		
-def check_events(game_settings, screen, game_stats, scoreboard, play_button, ship, aliens,
-		bullets):
+def check_events(game_settings, screen, game_stats, scoreboard, play_button, 
+		ship, aliens, bullets):
 	"""Respond to keypresses and mouse events"""
 	
 	for event in pygame.event.get():
@@ -49,13 +49,13 @@ def check_events(game_settings, screen, game_stats, scoreboard, play_button, shi
 			check_keyup_events(event, ship)
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouse_x, mouse_y = pygame.mouse.get_pos()
-			check_play_button(game_settings, screen, game_stats, scoreboard, play_button,
-				ship, aliens, bullets, mouse_x, mouse_y)
+			check_play_button(game_settings, screen, game_stats, scoreboard,
+				play_button, ship, aliens, bullets, mouse_x, mouse_y)
 			
 			
 			
-def check_play_button(game_settings, screen, game_stats, scoreboard, play_button, ship,
-		aliens, bullets, mouse_x, mouse_y):
+def check_play_button(game_settings, screen, game_stats, scoreboard,
+		play_button, ship, aliens, bullets, mouse_x, mouse_y):
 	"""start a new game when the player clicks the play button"""
 	play_button_pushed = play_button.rect.collidepoint(mouse_x, mouse_y) 
 	if play_button_pushed and not game_stats.game_active:
@@ -84,7 +84,7 @@ def start_game(game_settings, screen, game_stats, scoreboard, ship, aliens,
 	bullets.empty()
 	
 	#create the alien fleet and center our ship
-	create_fleet(game_settings, screen, ship, aliens)
+	create_fleet(game_settings, game_stats, screen, ship, aliens)
 	ship.center_ship()
 
 	
@@ -152,7 +152,7 @@ def check_collisions(game_settings, game_stats, scoreboard, screen, ship,
 		game_stats.level += 1
 		scoreboard.prep_level()
 		
-		create_fleet(game_settings, screen, ship, aliens)
+		create_fleet(game_settings, game_stats, screen, ship, aliens)
 	
 	
 	
@@ -163,8 +163,8 @@ def get_number_aliens_x(game_settings, alien_width):
 
 	
 	
-def create_alien(game_settings, screen, aliens, alien_number, row_number):
-	alien = Alien(game_settings, screen)
+def create_alien(game_settings, game_stats, screen, aliens, alien_number, row_number):
+	alien = Alien(game_settings, game_stats, screen)
 	alien_width = alien.rect.width
 	alien.x = alien_width + 2 * alien_width * alien_number
 	alien.rect.x = alien.x
@@ -183,16 +183,17 @@ def get_number_rows(game_settings, ship_height, alien_height):
 		
 	
 	
-def create_fleet(game_settings, screen, ship, aliens):
+def create_fleet(game_settings, game_stats, screen, ship, aliens):
 	"""Creates the alien fleet"""
-	alien = Alien(game_settings, screen)
+	alien = Alien(game_settings, game_stats, screen)
 	number_aliens_x = get_number_aliens_x(game_settings, alien.rect.width)
 	number_rows = get_number_rows(game_settings, ship.rect.height, 
 		alien.rect.height)
 	
 	for row_number in range(number_rows):
 		for alien_number in range(number_aliens_x):
-			create_alien(game_settings, screen, aliens, alien_number, row_number)
+			create_alien(game_settings, game_stats, screen, aliens, 
+				alien_number, row_number)
 
 			
 			
@@ -222,7 +223,7 @@ def ship_hit(game_settings, game_stats, screen, scoreboard, ship, bullets, alien
 		scoreboard.prep_lives()
 		aliens.empty()
 		bullets.empty()
-		create_fleet(game_settings, screen, ship, aliens)
+		create_fleet(game_settings, game_stats, screen, ship, aliens)
 		ship.center_ship()
 		sleep(0.5)
 	else:
