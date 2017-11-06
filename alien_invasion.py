@@ -17,18 +17,21 @@ def run_game():
 	scoreboard = Scoreboard(game_settings, screen, game_stats)
 	pygame.display.set_caption("Alein Invasion")
 	play_button = Button(game_settings, screen, "Play")
+	highscore_button = Button(game_settings, screen, "Highscores")
 	
 	ship = Ship(screen, game_settings)
 	bullets = Group()
 	aliens = Group()
-	gf.create_fleet(game_settings, game_stats, screen, ship, aliens)
+	#gf.create_fleet(game_settings, game_stats, screen, ship, aliens)
+	
+	pygame.mixer.music.load(game_settings.bgm)
+	pygame.mixer.music.play(-1)
 	
 
 	#Start the main loop of the game
 	while True:
-		game_stats.tick()
 		gf.check_events(game_settings, screen, game_stats, scoreboard, 
-			play_button, ship, aliens, bullets)
+			play_button, highscore_button, ship, aliens, bullets)
 		
 		if game_stats.game_active:
 			ship.update() 
@@ -38,7 +41,7 @@ def run_game():
 				ship, bullets, aliens)
 			
 		gf.update_screen(game_settings, game_stats, scoreboard, screen, ship, 
-			bullets, aliens, play_button)
-		
+			bullets, aliens, play_button, highscore_button)
+		game_stats.tick()
 		
 run_game()

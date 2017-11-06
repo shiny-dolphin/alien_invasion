@@ -2,8 +2,10 @@ import sys
 import pygame
 from time import sleep
 
+import sound
 from bullet import Bullet
 from alien import Alien
+from button import Button
 
 def check_keydown_events(event, game_settings, screen, ship, bullets):
 	"""respond to key presses"""
@@ -22,6 +24,7 @@ def check_keydown_events(event, game_settings, screen, ship, bullets):
 
 def fire_bullet(game_settings, screen, ship, bullets):
 	if len(bullets) < game_settings.bullets_allowed:
+		sound.play_sound(game_settings.shoot)
 		new_bullet = Bullet(game_settings, screen, ship)
 		bullets.add(new_bullet)
 
@@ -37,7 +40,7 @@ def check_keyup_events(event, ship):
 
 		
 def check_events(game_settings, screen, game_stats, scoreboard, play_button, 
-		ship, aliens, bullets):
+		highscore_button, ship, aliens, bullets):
 	"""Respond to keypresses and mouse events"""
 	
 	for event in pygame.event.get():
@@ -51,6 +54,8 @@ def check_events(game_settings, screen, game_stats, scoreboard, play_button,
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			check_play_button(game_settings, screen, game_stats, scoreboard,
 				play_button, ship, aliens, bullets, mouse_x, mouse_y)
+			check_highscore_button(game_settings, screen, game_stats, scoreboard,
+				highscore_button, mouse_x, mouse_y)
 			
 			
 			
@@ -64,8 +69,40 @@ def check_play_button(game_settings, screen, game_stats, scoreboard,
 		pygame.mouse.set_visible(False)
 		start_game(game_settings, screen, game_stats, scoreboard, ship, aliens,
 			bullets)
+			
+			
+def check_highscore_button(game_settings, screen, game_stats, scoreboard,
+		highscore_button, mouse_x, mouse_y):
+	"""checks if the highscore button is pushed"""
+	highscore_button_pushed = highscore_button.rect.collidepoint(mouse_x, mouse_y)
+	if highscore_button_pushed and not game_stats.game_active:
+		draw_highscore_screen(game_settings, screen, game_stats, scoreboard)
+	
+
+def check_return_button_pushed(exit_button):
+	"""check if the return button in the highscore screen is pushed"""
+	for event in pygame.event.get():	
+		if event.type == pygame.QUIT:
+			sys.exit()
+		elif event.type == pygame.MOUSEBUTTONDOWN:
+			mouse_x, mouse_y = pygame.mouse.get_pos()
+			exit_button_pushed = exit_button.rect.collidepoint(mouse_x, mouse_y)
+			return exit_button_pushed
 
 
+def draw_highscore_screen(game_settings, screen, game_stats, scoreboard):
+	"""changes the screen to display the rankings table"""
+	#Make an exit button so game can return to main screen
+	exit_button = Button(game_settings, screen, 'Return')
+	exit_button.adjust_button_position()
+	
+	#Continue to display rankings until 'return' button is pushed
+	while True:
+		screen.fill(game_settings.highscore_screen_color)
+		exit_button.draw_button()
+		if check_return_button_pushed(exit_button):
+			break			
+		pygame.display.flip()
 		
 def start_game(game_settings, screen, game_stats, scoreboard, ship, aliens, 
 		bullets):
@@ -87,10 +124,10 @@ def start_game(game_settings, screen, game_stats, scoreboard, ship, aliens,
 	create_fleet(game_settings, game_stats, screen, ship, aliens)
 	ship.center_ship()
 
+
 	
-					
 def update_screen(game_settings, game_stats, scoreboard, screen, ship, 
-			bullets, aliens, play_button):
+			bullets, aliens, play_button, highscore_rankings_button):
 	"""Update images on the screen and flip to the new screen"""
 	
 	screen.fill(game_settings.bg_color)
@@ -104,6 +141,7 @@ def update_screen(game_settings, game_stats, scoreboard, screen, ship,
 	
 	if not game_stats.game_active:
 		play_button.draw_button()
+		highscore_rankings_button.draw_button()
 	
 	#Make the most recently drawn screen visible
 	pygame.display.flip()
@@ -143,8 +181,10 @@ def check_collisions(game_settings, game_stats, scoreboard, screen, ship,
 			while aliens_hit:
 				alien = aliens_hit.pop()
 				if(alien.change_color()):
+					sound.play_sound(game_settings.hit_2)
 					aliens.add(alien)
 				else:
+					sound.play_sound(game_settings.alien_destroyed)
 					game_stats.score += alien.point_value	
 					scoreboard.prep_score()		
 		
@@ -232,7 +272,8 @@ def ship_hit(game_settings, game_stats, screen, scoreboard, ship, bullets, alien
 		bullets.empty()
 		create_fleet(game_settings, game_stats, screen, ship, aliens)
 		ship.center_ship()
-		sleep(0.5)
+		sound.play_sound(game_settings.ship_destroyed)
+		sleep(1)
 	else:
 		game_stats.game_active = False
 		pygame.mouse.set_visible(True)
