@@ -249,6 +249,7 @@ def ship_hit(game_settings, game_stats, screen, scoreboard, ship, bullets, alien
 		sleep(1)
 	else:
 		game_stats.game_active = False
+		sleep(2)
 		nif.game_over_screen(game_settings, game_stats, screen)
 		game_stats.save_hi_score()
 		pygame.mouse.set_visible(True)

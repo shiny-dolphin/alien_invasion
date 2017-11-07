@@ -16,8 +16,8 @@ def run_game():
 		(game_settings.screen_width, game_settings.screen_height))
 	scoreboard = Scoreboard(game_settings, screen, game_stats)
 	pygame.display.set_caption("Alein Invasion")
-	play_button = Button(game_settings, screen, "Play")
-	highscore_button = Button(game_settings, screen, "Highscores")
+	play_button = Button(game_settings, screen, "Play", "menu")
+	highscore_button = Button(game_settings, screen, "Highscores", "menu")
 	
 	ship = Ship(screen, game_settings)
 	bullets = Group()
@@ -43,5 +43,7 @@ def run_game():
 		gf.update_screen(game_settings, game_stats, scoreboard, screen, ship, 
 			bullets, aliens, play_button, highscore_button)
 		game_stats.tick()
+		
+		
 		
 run_game()
