@@ -10,7 +10,7 @@ class Settings():
 		
 		#Ship settings
 		self.ship_speed = 2
-		self.ship_limit = 0
+		self.ship_limit = 3
 		
 		#Bullet settings
 		self.bullet_speed_factor = 1
@@ -33,7 +33,7 @@ class Settings():
 		self.alien_points_green = 50
 		self.alien_points_blue = 150
 		self.alien_points_red = 250
-		self.score_scale = 1.5
+		self.score_scale = 1.1
 		
 		#Sounds and where they are located. 
 		self.shoot = 'sounds/shoot.wav'

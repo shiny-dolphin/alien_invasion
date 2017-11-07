@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 from button import Button
 
@@ -15,8 +16,7 @@ def check_highscore_button(game_settings, screen, game_stats, scoreboard,
 def draw_highscore_screen(game_settings, screen, game_stats, scoreboard):
 	"""changes the screen to display the rankings table"""
 	#Make an exit button so game can return to main screen
-	exit_button = Button(game_settings, screen, 'Return')
-	exit_button.adjust_button_position()
+	exit_button = Button(game_settings, screen, 'Return', 'return')
 	
 	#Continue to display rankings until 'return' button is pushed
 	while True:
