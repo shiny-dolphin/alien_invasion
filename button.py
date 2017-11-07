@@ -7,13 +7,16 @@ _number_of_buttons = 0
 
 class Button():
 
-	def __init__(self, game_settings, screen, message):
+	def __init__(self, game_settings, screen, message, position=''):
 		"""intialise button attributes"""
 		global _number_of_buttons
 		_number_of_buttons += 1
 
 		self.screen = screen
 		self.screen_rect= screen.get_rect()
+		
+		#buttons used for input have the position attribute
+		self.position = position
 		
 		#set the dimensions and properties of the button
 		self.width = 200

@@ -1,4 +1,5 @@
 import pygame
+import json
 
 class GameStats():
 	"""Track statistics for alien invastion"""
@@ -16,6 +17,8 @@ class GameStats():
 		
 		#High Scores
 		self.high_score = 0
+		self.filename = 'highscore.json'
+		self.load_hi_score()
 
 	def tick(self):
 		self.clock.tick(self.FPS)
@@ -24,3 +27,15 @@ class GameStats():
 		self.ships_left = self.game_settings.ship_limit
 		self.score = 0
 		self.level = 1
+		
+	def save_hi_score(self):
+		with open(self.filename, 'w') as f_obj:
+			json.dump(self.high_score, f_obj)
+			
+	def load_hi_score(self):
+		try:
+			with open(self.filename) as f_obj:
+				self.high_score = json.load(f_obj)
+		except FileNotFoundError:
+			pass
+			

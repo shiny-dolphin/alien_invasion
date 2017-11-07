@@ -3,6 +3,8 @@ import pygame
 from time import sleep
 
 import sound
+import highscore_screen_functions as hsf
+import name_input_functions as nif
 from bullet import Bullet
 from alien import Alien
 from button import Button
@@ -54,7 +56,7 @@ def check_events(game_settings, screen, game_stats, scoreboard, play_button,
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			check_play_button(game_settings, screen, game_stats, scoreboard,
 				play_button, ship, aliens, bullets, mouse_x, mouse_y)
-			check_highscore_button(game_settings, screen, game_stats, scoreboard,
+			hsf.check_highscore_button(game_settings, screen, game_stats, scoreboard,
 				highscore_button, mouse_x, mouse_y)
 			
 			
@@ -71,38 +73,6 @@ def check_play_button(game_settings, screen, game_stats, scoreboard,
 			bullets)
 			
 			
-def check_highscore_button(game_settings, screen, game_stats, scoreboard,
-		highscore_button, mouse_x, mouse_y):
-	"""checks if the highscore button is pushed"""
-	highscore_button_pushed = highscore_button.rect.collidepoint(mouse_x, mouse_y)
-	if highscore_button_pushed and not game_stats.game_active:
-		draw_highscore_screen(game_settings, screen, game_stats, scoreboard)
-	
-
-def check_return_button_pushed(exit_button):
-	"""check if the return button in the highscore screen is pushed"""
-	for event in pygame.event.get():	
-		if event.type == pygame.QUIT:
-			sys.exit()
-		elif event.type == pygame.MOUSEBUTTONDOWN:
-			mouse_x, mouse_y = pygame.mouse.get_pos()
-			exit_button_pushed = exit_button.rect.collidepoint(mouse_x, mouse_y)
-			return exit_button_pushed
-
-
-def draw_highscore_screen(game_settings, screen, game_stats, scoreboard):
-	"""changes the screen to display the rankings table"""
-	#Make an exit button so game can return to main screen
-	exit_button = Button(game_settings, screen, 'Return')
-	exit_button.adjust_button_position()
-	
-	#Continue to display rankings until 'return' button is pushed
-	while True:
-		screen.fill(game_settings.highscore_screen_color)
-		exit_button.draw_button()
-		if check_return_button_pushed(exit_button):
-			break			
-		pygame.display.flip()
 		
 def start_game(game_settings, screen, game_stats, scoreboard, ship, aliens, 
 		bullets):
@@ -147,12 +117,15 @@ def update_screen(game_settings, game_stats, scoreboard, screen, ship,
 	pygame.display.flip()
 	
 	
+	
 def check_high_score(game_stats, scoreboard):
 	"""See if there is a new high score, called from check_collisions func"""
 
 	if game_stats.score > game_stats.high_score:
 		game_stats.high_score = game_stats.score
 		scoreboard.prep_high_score()
+	
+	
 	
 def update_bullets(game_settings, game_stats, scoreboard, screen, ship, 
 		bullets, aliens):
@@ -276,9 +249,11 @@ def ship_hit(game_settings, game_stats, screen, scoreboard, ship, bullets, alien
 		sleep(1)
 	else:
 		game_stats.game_active = False
+		nif.game_over_screen(game_settings, game_stats, screen)
+		game_stats.save_hi_score()
 		pygame.mouse.set_visible(True)
-	
-	
+		
+		
 
 def check_bottom(game_settings, game_stats, screen, scoreboard,ship, bullets, aliens):
 	"""checks if aliens has hit bottom of the screen"""
