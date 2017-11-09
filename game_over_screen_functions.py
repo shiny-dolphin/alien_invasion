@@ -5,8 +5,11 @@ import sys
 from button import Button
 from slot import Slot
 
+_game_over_screen_active = True
 
 def game_over_screen(game_settings, game_stats, screen):
+	global _game_over_screen_active
+	
 	#image and rect for printing game over at the top of the screen
 	image = pygame.image.load('images/game_over.bmp')
 	image_rect = image.get_rect()
@@ -39,7 +42,7 @@ def game_over_screen(game_settings, game_stats, screen):
 	#moveable border to show player which slot is active
 	border = Button(game_settings, screen, '', 'border')
 	
-	while True:
+	while _game_over_screen_active:
 		screen.fill((0,0,0))
 		
 		#Draw the three slots, they're in a list
@@ -60,13 +63,19 @@ def game_over_screen(game_settings, game_stats, screen):
 			screen.blit(message_image, message_rect)
 			rect_y -= 35
 			
-		
-		check_events(border, slots)		
+		check_events(border, game_stats, slots)		
 		pygame.display.flip()
+	
+	
+	#resets some stats so that the next game over screen displays correctly
+	_game_over_screen_active = True
+	slot_1.reset()
+	border.reset_border_position()
 
 		
-def check_events(border, slots):
+def check_events(border, game_stats, slots):
 	"""check if the return button in the highscore screen is pushed"""
+	global _game_over_screen_active
 	for event in pygame.event.get():	
 		if event.type == pygame.QUIT:
 			sys.exit()
@@ -76,6 +85,12 @@ def check_events(border, slots):
 				for slot in slots:
 					if slot.active:
 						border.make_border()
+		
+				#check if all slots have been confirmed then save game if so		
+				if slots_inactive(slots):
+					save_player_hiscore(game_stats, slots)
+					_game_over_screen_active = False
+					
 			if event.key == pygame.K_UP:
 				for slot in slots:
 					if slot.active:
@@ -100,6 +115,27 @@ def move_active_slot(slots):
 		elif x == 2 and slots[x].active:
 			slots[x].active = False
 			break
+
+
+			
+def save_player_hiscore(game_stats, slots):
+	player_name = ''
+	for slot in slots:
+		player_name += slot.character
+	game_stats.save_hi_score(player_name)
+	game_stats.save_hi_score_two(player_name)
+
+
+	
+def slots_inactive(slots):
+	"""Checks to see if all the slots have been confirmed"""
+	for slot in slots:
+		if slot.active:
+			return False
+	return True
+
+	
+	
 
 
 			

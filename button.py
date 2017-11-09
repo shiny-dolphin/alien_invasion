@@ -105,6 +105,12 @@ class Button():
 		"""draws the moveable border"""
 		pygame.draw.rect(self.screen, self.button_color, self.rect, 5)
 		
+	def reset_border_position(self):
+		"""resets the border position, so it draws in the correct place in 
+		subsequent games"""
+		global _border_position
+		_border_position = 0
+		
 		
 		
 		

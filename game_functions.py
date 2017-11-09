@@ -4,7 +4,7 @@ from time import sleep
 
 import sound
 import highscore_screen_functions as hsf
-import name_input_functions as nif
+import game_over_screen_functions as gosf
 from bullet import Bullet
 from alien import Alien
 from button import Button
@@ -249,9 +249,9 @@ def ship_hit(game_settings, game_stats, screen, scoreboard, ship, bullets, alien
 		sleep(1)
 	else:
 		game_stats.game_active = False
-		sleep(2)
-		nif.game_over_screen(game_settings, game_stats, screen)
-		game_stats.save_hi_score()
+		sleep(1)
+		gosf.game_over_screen(game_settings, game_stats, screen)
+		#game_stats.save_hi_score()
 		pygame.mouse.set_visible(True)
 		
 		

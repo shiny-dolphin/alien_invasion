@@ -81,6 +81,13 @@ class Slot():
 		
 		
 		
+	def reset(self):
+		"""resets the slot positions, so it draws in the correct place for
+		subsequent game"""
+		global _number_of_input_buttons
+		_number_of_input_buttons = 0
+		
+		
 		
 		
 		
