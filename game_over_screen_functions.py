@@ -67,7 +67,7 @@ def game_over_screen(game_settings, game_stats, screen):
 		pygame.display.flip()
 	
 	
-	#resets some stats so that the next game over screen displays correctly
+	#resets some settings so that the next game over screen displays correctly
 	_game_over_screen_active = True
 	slot_1.reset()
 	border.reset_border_position()
@@ -123,7 +123,6 @@ def save_player_hiscore(game_stats, slots):
 	for slot in slots:
 		player_name += slot.character
 	game_stats.save_hi_score(player_name)
-	game_stats.save_hi_score_two(player_name)
 
 
 	

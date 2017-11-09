@@ -71,6 +71,3 @@ class Scoreboard():
 		self.screen.blit(self.level_image, self.level_rect)
 		self.ships.draw(self.screen)
 		
-	def get_player_score(self):
-		return 
-		

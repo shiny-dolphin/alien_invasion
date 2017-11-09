@@ -251,7 +251,6 @@ def ship_hit(game_settings, game_stats, screen, scoreboard, ship, bullets, alien
 		game_stats.game_active = False
 		sleep(1)
 		gosf.game_over_screen(game_settings, game_stats, screen)
-		#game_stats.save_hi_score()
 		pygame.mouse.set_visible(True)
 		
 		
