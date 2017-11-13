@@ -2,7 +2,8 @@ import pygame
 import json
 
 class GameStats():
-	"""Track statistics for alien invastion"""
+	"""Track statistics for alien invastion. Also loads and saves all the 
+	high scores"""
 	
 	def __init__(self, game_settings):
 		self.game_settings = game_settings
@@ -44,9 +45,9 @@ class GameStats():
 		
 		player = (self.score, self.level, player_name)
 		self.highscore_all.append(player)
-		print("saving " + player_name + "'s hiscore")
 		with open(self.filename, 'w') as f_obj:
 			json.dump(self.highscore_all, f_obj)
+		self.sort_players()
 	
 	
 	
@@ -54,15 +55,28 @@ class GameStats():
 		try:
 			with open(self.filename) as f_obj:
 				self.highscore_all = json.load(f_obj)
-				self.highscore_all = sorted(self.highscore_all, 
-					key= lambda player : player[0])
-				self.highscore_all.reverse()
+				self.sort_players()
 				top_player = self.highscore_all[0]
 				self.high_score = top_player[0]
-				self.top_player_name = top_player[2]
-				
+				self.top_player_name = top_player[2]	
 		except FileNotFoundError:
 			pass
+			
+	
+	
+	def get_top_five(self):
+		top_five_players = self.highscore_all[0:5]
+		return top_five_players
+		
+		
+		
+	def sort_players(self):
+		self.highscore_all = sorted(self.highscore_all, 
+			key= lambda player : player[0])
+		self.highscore_all.reverse()
+		
+	
+		
 		
 	
 	

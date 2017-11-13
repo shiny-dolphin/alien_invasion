@@ -8,6 +8,7 @@ from slot import Slot
 _game_over_screen_active = True
 
 def game_over_screen(game_settings, game_stats, screen):
+	"""draws the game over screen, where player can input name"""
 	global _game_over_screen_active
 	
 	#image and rect for printing game over at the top of the screen
@@ -119,6 +120,7 @@ def move_active_slot(slots):
 
 			
 def save_player_hiscore(game_stats, slots):
+	"""gets players name from the three slots and then saves it"""
 	player_name = ''
 	for slot in slots:
 		player_name += slot.character
